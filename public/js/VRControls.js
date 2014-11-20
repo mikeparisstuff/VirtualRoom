@@ -24,7 +24,7 @@ THREE.VRControls = function ( camera, done ) {
 			var error;
 			for ( var i = 0; i < devices.length; ++i ) {
 				if ( devices[i] instanceof PositionSensorVRDevice ) {
-					vrInput = devices[i]
+					vrInput = devices[i];
 					self._vrInput = vrInput;
 					break; // We keep the first we encounter
 				}
