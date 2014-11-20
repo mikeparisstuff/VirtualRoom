@@ -1,0 +1,25 @@
+{
+  "name": "Capstone",
+  "version": "1.0.0",
+  "description": "A virtual reality sandbox. Created for my 2014 senior Capstone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://mikeparis@bitbucket.org/mikeparis/capstone.git"
+  },
+  "keywords": [
+    "VR",
+    "Virtual",
+    "Reality",
+    "Oculus",
+    "Rift"
+  ],
+  "author": "Michael Paris",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.10.2"
+  }
+}
