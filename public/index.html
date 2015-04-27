@@ -2,9 +2,10 @@
 
 <html lang="en">
 <head>
-	<title>VR WebGL boilerplate using three.js</title>
+	<title>OpenVR</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<!--<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>-->
 	<style>
 		body {
 			background-color: #000;
@@ -13,17 +14,120 @@
 			padding: 0;
 			overflow: hidden;
 		}
+		#hud-left {
+			position: absolute;
+			z-index: 9999;
+			left: 25%;
+			top: 25%;
+			font-family: 'Open Sans', sans-serif;
+		}
+		.selected_obj_hud {
+			position: relative;
+			left: -50%;
+			background-color: rgba(3,3,3,.5);
+			padding: 3px 20px 3px 20px;
+			width: 300px;
+			visibility: hidden;
+		}
+		#hud-right {
+			position: absolute;
+			z-index: 9999;
+			left: 75%;
+			top: 25%;
+			font-family: 'Open Sans', sans-serif;
+		}
+		.right {
+			float: right;
+		}
+		#blocker {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0,0,0,0.5);
+		}
+		#instructions {
+
+			width: 100%;
+			height: 100%;
+
+			display: -webkit-box;
+			display: -moz-box;
+			display: box;
+
+			-webkit-box-orient: horizontal;
+			-moz-box-orient: horizontal;
+			box-orient: horizontal;
+
+			-webkit-box-pack: center;
+			-moz-box-pack: center;
+			box-pack: center;
+
+			-webkit-box-align: center;
+			-moz-box-align: center;
+			box-align: center;
+
+			color: #ffffff;
+			text-align: center;
+
+			cursor: pointer;
+		}
 	</style>
 </head>
 
 <body>
+
+<div id="blocker">
+
+	<div id="instructions">
+		<span style="font-size:40px">Click to play</span>
+		<br />
+		<br/>
+		Instructions
+		<br/>
+		Move: Up, Down, Left, Right
+		<br/>
+		Create Object: Enter
+		<br/>
+		Select Object: Look at object + Spacebar
+		<br/>
+		Rotate Selected Object: W, A, S, D
+		<br/>
+		Change Selected Object Dimensions: U, I, O, J, K, L
+	</div>
+
+</div>
+
+<div id="hud-left">
+	<div class="selected_obj_hud">
+		<h2 style="text-align: center">Selected Object</h2>
+		<hr/>
+		<p>Type: <span class="right type-value">Box</span></p>
+		<p>Size: <span class="right size-value"></span></p>
+		<p>Position: <span class="right position-value">[x: 0,y: 0, z: 0]</span></p>
+		<p>Rotation: <span class="right rotation-value">[x: 0,y: 0, z: 0]</span></p>
+		<p>Color: <span class="right color-value">0xff0000</span></p>
+	</div>
+</div>
+
+<div id="hud-right">
+	<div class="selected_obj_hud">
+		<h2 style="text-align: center">Selected Object</h2>
+		<hr/>
+		<p>Type: <span class="right type-value">Box</span></p>
+		<p>Size: <span class="right size-value"></span></p>
+		<p>Position: <span class="right position-value">[x: 0,y: 0, z: 0]</span></p>
+		<p>Rotation: <span class="right rotation-value">[x: 0,y: 0, z: 0]</span></p>
+		<p>Color: <span class="right color-value">0xff0000</span></p>
+	</div>
+</div>
 
 </body>
 
 	<!--
 	three.js 3d library
 -->
-<script src="js/three.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="js/three2.min.js"></script>
 
 <!--Socket IO-->
 <script src="/socket.io/socket.io.js"></script>
@@ -36,6 +140,8 @@
 	VREffect.js handles stereo camera setup and rendering.
 -->
 <script src="js/VREffect.js"></script>
+
+<script src="js/PointerLockControls.js"></script>
 
 <script src="js/capstone.js"></script>
 </html>
