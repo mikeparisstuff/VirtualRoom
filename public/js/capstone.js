@@ -40,6 +40,7 @@ var CAPSTONE = (function() {
         this.moveRight = false;
         this.velocity = new THREE.Vector3();
         this.prevTime = performance.now();
+        this.movementInterval = null;
 
         this.projector = new THREE.Projector();
 
@@ -753,11 +754,11 @@ var CAPSTONE = (function() {
                 break;
         }
         this.userObject.position.set(obj.position);
-        this.socket.emit('user moved', {
-            type: "positional",
-            position: {x: obj.position.x, y: obj.position.y, z: obj.position.z},
-            userId: this.userId
-        });
+        //this.socket.emit('user moved', {
+        //    type: "positional",
+        //    position: {x: obj.position.x, y: obj.position.y, z: obj.position.z},
+        //    userId: this.userId
+        //});
     };
 
     //constr.prototype.movePlayer = function (obj, axis, inc) {
@@ -917,13 +918,13 @@ var CAPSTONE = (function() {
         this.camera.translateZ( this.velocity.z * delta );
 
         this.userObject.position.set(this.camera.position);
-        if (this.velocity.x > 0 || this.velocity.y > 0 || this.velocity.z > 0) {
-            this.socket.emit('user moved', {
-                type: "positional",
-                position: {x: this.camera.position.x, y: this.camera.position.y, z: this.camera.position.z},
-                userId: this.userId
-            });
-        }
+        //if (this.velocity.x > 0 || this.velocity.y > 0 || this.velocity.z > 0) {
+        //    this.socket.emit('user moved', {
+        //        type: "positional",
+        //        position: {x: this.camera.position.x, y: this.camera.position.y, z: this.camera.position.z},
+        //        userId: this.userId
+        //    });
+        //}
 
         if ( this.camera.position.y < 10 ) {
 
@@ -935,6 +936,25 @@ var CAPSTONE = (function() {
         }
 
         this.prevTime = time;
+    };
+
+    constr.prototype.toggleMovementTimer = function() {
+        if (this.moveRight || this.moveLeft || this.moveForward || this.moveBackward) {
+            if (this.movementInterval === null) {
+                var that = this;
+                this.movementInterval = setInterval(function() {
+                    that.socket.emit('user moved', {
+                        type: "positional",
+                        position: {x: that.camera.position.x, y: that.camera.position.y, z: that.camera.position.z},
+                        userId: that.userId
+                    });
+                }, 200);
+            }
+        } else if (this.movementInterval !== null) {
+            // No movements are set. If timer is not null invalidate and set to null
+            clearInterval(this.movementInterval);
+            this.movementInterval = null;
+        }
     };
 
     constr.prototype.onKey = function(event, uuid) {
@@ -976,17 +996,21 @@ var CAPSTONE = (function() {
                 break;
             case 38: // up
                 this.moveForward = true;
+                this.toggleMovementTimer();
                 break;
 
             case 37: // left
                 this.moveLeft = true;
+                this.toggleMovementTimer();
                 break;
 
             case 40: // down
                 this.moveBackward = true;
+                this.toggleMovementTimer();
                 break;
             case 39: // right
                 this.moveRight = true;
+                this.toggleMovementTimer();
                 break;
             //case 37:
             //    // Left Arrow
@@ -1151,18 +1175,22 @@ var CAPSTONE = (function() {
 
             case 38: // up
                 this.moveForward = false;
+                this.toggleMovementTimer();
                 break;
 
             case 37: // left
                 this.moveLeft = false;
+                this.toggleMovementTimer();
                 break;
 
             case 40: // down
                 this.moveBackward = false;
+                this.toggleMovementTimer();
                 break;
 
             case 39: // right
                 this.moveRight = false;
+                this.toggleMovementTimer();
                 break;
 
         }
